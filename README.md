@@ -1,33 +1,123 @@
-[![release](https://img.shields.io/github/v/release/d-cogswell/MistrasDTA)](https://github.com/d-cogswell/MistrasDTA/releases)
-[![NewareNDA regression tests](https://github.com/d-cogswell/MistrasDTA/actions/workflows/tests.yml/badge.svg)](https://github.com/d-cogswell/MistrasDTA/actions/workflows/tests.yml)
-[![Coverage Status](https://coveralls.io/repos/github/d-cogswell/MistrasDTA/badge.svg?branch=development)](https://coveralls.io/github/d-cogswell/MistrasDTA?branch=development)
+# MistrasDTA-hdf5
 
-# MistrasDTA
-Python module to read acoustic emissions hit data and waveforms from Mistras DTA files. The structure of these binary files is detailed in Appendix II of the Mistras user manual.
+Python tools for **streaming ingestion of Mistras DTA acoustic emission data**
+with **incremental HDF5 export**, designed for use in modern Python
+applications and data pipelines.
 
-# Installation
-MistrasDTA can be installed from PyPI with the following command:
-```
-python -m pip install MistrasDTA
-```
+This project is a **fork of**
+[MistrasDTA](https://github.com/d-cogswell/MistrasDTA) by Daniel A. Cogswell.
+It preserves the original binary parsing logic while introducing a
+generator-based streaming API and native HDF5 output.
 
-# Usage
-Read the hit summary table from a DTA file:
-```
-import MistrasDTA
-rec, _ = MistrasDTA.read_bin('cluster.DTA', skip_wfm=True)
+---
 
-```
+## Background
 
-Read hit summary and waveform data from a DTA:
-```
-import MistrasDTA
-from numpy.lib.recfunctions import join_by
+Mistras DTA files contain binary-encoded acoustic emission (AE) hit summaries,
+waveforms, and hardware metadata. The file structure is described in
+*Appendix II of the Mistras User Manual*.
 
-# Read the binary file and join summary and waveform tables
-rec, wfm = MistrasDTA.read_bin('cluster.DTA')
-merged = join_by(['SSSSSSSS.mmmuuun', 'CH'], rec, wfm)
+The original **MistrasDTA** package focuses on reading entire files into memory
+and returning NumPy record arrays.  
+**MistrasDTA-hdf5** is optimized instead for:
 
-# Extract the first waveform in units of microseconds and volts
-t, V = MistrasDTA.get_waveform_data(merged[0])
-```
+- large DTA files
+- incremental / streaming processing
+- integration into Python applications and services
+- persistent, schema-stable HDF5 storage
+
+---
+
+## Key differences from upstream MistrasDTA
+
+Compared to the original project, this fork provides:
+
+- **Streaming parser** (`read_bin_stream`) using Python generators
+- **Incremental processing** of hits, waveforms, and metadata
+- **Waveforms as scaled NumPy arrays** (not raw byte blobs)
+- **Native HDF5 export** with chunked, append-only datasets
+- Clear separation of:
+  - hit data
+  - waveform data
+  - waveform metadata
+  - hardware and test metadata
+
+The original `read_bin()` API is intentionally **not preserved** to avoid
+implicit full-file loading and memory coupling.
+
+---
+
+## Installation
+
+At present, this fork is intended for direct use from source.
+
+Clone the repository:
+
+git clone https://github.com/<your-username>/MistrasDTA-hdf5.git
+cd MistrasDTA-hdf5
+
+Install dependencies as needed:
+pip install numpy h5py
+
+## Usage
+
+- Streaming parse of a DTA file
+
+from MistrasDTA import read_bin_stream
+
+for tag, obj in read_bin_stream("cluster.DTA"):
+    if tag == "rec":
+        # acoustic emission hit
+        print(obj["RTOT"], obj["ENER"])
+    elif tag == "wfm":
+        # waveform
+        print(obj["CID"], obj["WAVEFORM"].shape)
+    elif tag == "meta":
+        # metadata (hardware, test start time, ...)
+        print(obj)
+        
+- Stream directly to HDF5
+
+from MistrasDTA import stream_to_h5
+
+stream_to_h5(
+    dta_path="cluster.DTA",
+    h5_path="cluster.h5",
+    skip_wfm=False,
+    chunk=10000,
+)
+
+The resulting HDF5 file contains:
+
+/hits/RTOT
+/hits/CID
+/hits/<parametric fields>
+
+/waveforms
+/waveforms_meta/CID
+/waveforms_meta/SRATE
+/waveforms_meta/TDLY
+
+/file attributes:
+  test_start_time
+  hardware configuration
+
+## License and attribution
+
+This project is released under the MIT License.
+
+Original work:
+
+Copyright © 2019–2024
+Daniel A. Cogswell
+
+Modifications and extensions:
+
+Copyright © 2026
+Robert Farla
+
+See LICENSE for full details.
+
+## Disclaimer
+This project is not affiliated with, endorsed by, or supported by Mistras.
+It is an independent, community-driven tool provided “as is”.
