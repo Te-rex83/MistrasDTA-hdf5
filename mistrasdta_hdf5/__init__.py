@@ -7,7 +7,7 @@ Streaming parser and HDF5 exporter for Mistras DTA files.
 from .stream import read_bin_stream
 from .hdf5 import stream_to_h5
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "read_bin_stream",

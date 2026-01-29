@@ -71,7 +71,12 @@ def stream_to_h5(dta_path, h5_path, skip_wfm=False, chunk=10_000):
                 for name in ("CID", "SRATE", "TDLY"):
                     ds = wfm_meta[name]
                     ds.resize((ds.shape[0] + 1,))
-                    ds[-1] = obj.get(name, 0)
+
+                    value = obj.get(name)
+                    if value is None:
+                        value = 0   # sentinel for "unknown"
+
+                    ds[-1] = value
 
             elif tag == "meta":
                 if "test_start_time" in obj:

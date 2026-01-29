@@ -60,3 +60,13 @@ https://semver.org/
 
 
 
+
+\## \[0.1.1] – 2026-01-29
+
+
+
+\### Changed
+
+\- Fix in hdf5.py to explicitly handle None before writing to HDF5.
+
+
