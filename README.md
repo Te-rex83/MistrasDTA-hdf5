@@ -49,18 +49,10 @@ implicit full-file loading and memory coupling.
 
 ## Installation
 
-At present, this fork is intended for direct use from source.
-
-Clone the repository:
+Install from PyPI:
 
 ```
-git clone https://github.com/<your-username>/MistrasDTA-hdf5.git
-cd MistrasDTA-hdf5
-```
-
-Install dependencies as needed:
-```
-pip install numpy h5py
+pip install mistrasdta-hdf5
 ```
 
 ## Usage
@@ -68,7 +60,7 @@ pip install numpy h5py
 - Streaming parse of a DTA file
 
 ```
-from MistrasDTA import read_bin_stream
+from mistrasdta_hdf5 import read_bin_stream
 
 for tag, obj in read_bin_stream("cluster.DTA"):
     if tag == "rec":
@@ -85,7 +77,7 @@ for tag, obj in read_bin_stream("cluster.DTA"):
 - Stream directly to HDF5
 
 ```
-from MistrasDTA import stream_to_h5
+from mistrasdta_hdf5 import stream_to_h5
 
 stream_to_h5(
     dta_path="cluster.DTA",
