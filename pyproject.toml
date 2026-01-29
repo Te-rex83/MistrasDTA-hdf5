@@ -1,28 +1,61 @@
 [build-system]
-requires = ["hatchling >= 1.26"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "MistrasDTA"
-version = "0.1.5"
-dependencies = [
-  "numpy",
-]
-requires-python = ">=3.6"
-authors = [
-  { name = "Dan Cogswell", email = "cogswell@alum.mit.edu" },
-]
-description = "Read AEWin acoustic emissions DTA files"
+name = "mistrasdta-hdf5"
+version = "0.1.0"
+description = "Streaming parser and HDF5 exporter for Mistras DTA acoustic emission data"
 readme = "README.md"
-license = "MIT"
-license-files = ["LICEN[CS]E*"]
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+authors = [
+    { name = "Robert Farla" }
+]
+
+maintainers = [
+    { name = "Robert Farla" }
+]
+
+keywords = [
+    "acoustic-emission",
+    "mistras",
+    "dta",
+    "hdf5",
+    "streaming",
+    "scientific-data",
+]
+
 classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+dependencies = [
+    "numpy>=1.22",
+]
+
+[project.optional-dependencies]
+hdf5 = [
+    "h5py>=3.9",
 ]
 
 [project.urls]
-Homepage = "https://github.com/d-cogswell/MistrasDTA"
-Issues = "https://github.com/d-cogswell/MistrasDTA/issues"
+Homepage = "https://github.com/<your-username>/MistrasDTA-hdf5"
+Repository = "https://github.com/<your-username>/MistrasDTA-hdf5"
+Issues = "https://github.com/<your-username>/MistrasDTA-hdf5/issues"
 
-[project.optional-dependencies]
-test = ["pytest", "coveralls"]
+[tool.setuptools]
+packages = ["mistrasdta_hdf5"]
+
+[tool.setuptools.package-data]
+mistrasdta_hdf5 = ["py.typed"]
