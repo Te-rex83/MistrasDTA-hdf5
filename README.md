@@ -52,8 +52,9 @@ implicit full-file loading and memory coupling.
 Install from PyPI:
 
 ```
-pip install mistrasdta-hdf5
+pip install mistrasdta-hdf5[hdf5]
 ```
+where [hdf5] is an optional dependency (required only for output to h5 files).
 
 ## Usage
 
