@@ -53,16 +53,21 @@ At present, this fork is intended for direct use from source.
 
 Clone the repository:
 
+```
 git clone https://github.com/<your-username>/MistrasDTA-hdf5.git
 cd MistrasDTA-hdf5
+```
 
 Install dependencies as needed:
+```
 pip install numpy h5py
+```
 
 ## Usage
 
 - Streaming parse of a DTA file
 
+```
 from MistrasDTA import read_bin_stream
 
 for tag, obj in read_bin_stream("cluster.DTA"):
@@ -75,9 +80,11 @@ for tag, obj in read_bin_stream("cluster.DTA"):
     elif tag == "meta":
         # metadata (hardware, test start time, ...)
         print(obj)
+```
         
 - Stream directly to HDF5
 
+```
 from MistrasDTA import stream_to_h5
 
 stream_to_h5(
@@ -86,9 +93,11 @@ stream_to_h5(
     skip_wfm=False,
     chunk=10000,
 )
+```
 
 The resulting HDF5 file contains:
 
+```
 /hits/RTOT
 /hits/CID
 /hits/<parametric fields>
@@ -101,6 +110,7 @@ The resulting HDF5 file contains:
 /file attributes:
   test_start_time
   hardware configuration
+```
 
 ## License and attribution
 
