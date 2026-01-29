@@ -68,7 +68,7 @@ pip install numpy h5py
 - Streaming parse of a DTA file
 
 ```
-from MistrasDTA import read_bin_stream
+from MistrasDTA-hdf5 import read_bin_stream
 
 for tag, obj in read_bin_stream("cluster.DTA"):
     if tag == "rec":
@@ -85,7 +85,7 @@ for tag, obj in read_bin_stream("cluster.DTA"):
 - Stream directly to HDF5
 
 ```
-from MistrasDTA import stream_to_h5
+from MistrasDTA-hdf5 import stream_to_h5
 
 stream_to_h5(
     dta_path="cluster.DTA",
